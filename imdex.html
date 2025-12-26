@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MeioNovel - Read Novels Online</title>
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        /* Inline CSS for index.html */
+        .hero-section {
+            margin-bottom: 2rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .quick-actions::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quick-action {
+            flex: 0 0 auto;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .quick-action:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .history-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .history-single {
+            width: 100%;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Thank You Section Styling */
+        .thank-you-footer {
+            text-align: center;
+            padding: 4rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, transparent, var(--bg-secondary));
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .thank-you-footer h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .thank-you-footer p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .quick-actions {
+                padding-bottom: 1rem;
+            }
+            
+            .quick-action {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    
+    <div class="container">
+        <header class="top-header">
+            <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="index.html" class="logo">
+                    📚 <span>MeioNovel</span>
+                </a>
+                <button id="theme-toggle" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;" title="Toggle theme" aria-label="Toggle dark/light mode">
+                    🌙
+                </button>
+            </div>
+            
+            <form id="search-form" class="search-form">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" 
+                       id="search-input" 
+                       class="search-input" 
+                       placeholder="Search novels..." 
+                       autocomplete="off"
+                       aria-label="Search novels">
+            </form>
+        </header>
+
+        <main id="main-content">
+            <section class="hero-section">
+                <div id="hero-slider" class="skeleton" style="height: 300px; border-radius: var(--radius);">
+                    </div>
+            </section>
+
+            <section class="quick-actions-section">
+                <div class="quick-actions">
+                    <a href="genres.html" class="quick-action">All Genres</a>
+                    <a href="search.html?sort=latest" class="quick-action">Latest Updates</a>
+                    <a href="search.html?sort=popular" class="quick-action">Most Popular</a>
+                    <a href="search.html?sort=completed" class="quick-action">Completed</a>
+                    <a href="search.html?type=ln" class="quick-action">Light Novels</a>
+                    <a href="search.html?type=wn" class="quick-action">Web Novels</a>
+                </div>
+            </section>
+
+            <section id="history" class="history-section">
+                <div class="history-header">
+                    <h2 class="section-title">Reading History</h2>
+                    <a href="history.html" class="btn btn-secondary" style="font-size: 0.75rem;">
+                        View All
+                    </a>
+                </div>
+                <div id="history-container" class="history-single">
+                    <div class="empty-state">
+                        <p>No reading history yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="updates-section">
+                <div class="section-header">
+                    <h2 class="section-title">Latest Updates</h2>
+                    <a href="search.html?sort=latest" class="section-link">View All ›</a>
+                </div>
+                <div id="latest-updates" class="grid grid-3">
+                    </div>
+            </section>
+
+            <section class="popular-section">
+                <div class="section-header">
+                    <h2 class="section-title">Popular Novels</h2>
+                    <a href="search.html?sort=popular" class="section-link">View All ›</a>
+                </div>
+                <div id="popular-novels" class="grid grid-3">
+                    </div>
+            </section>
+
+            <section class="thank-you-footer">
+                <div class="thank-you-content">
+                    <h3>✨ Terima Kasih Telah Berkunjung!</h3>
+                    <p>Terima kasih sudah setia membaca novel di <strong>MeioNovel</strong>.<br> 
+                    Kami akan terus memperbarui koleksi novel terbaik untuk menemani waktu luangmu.<br>
+                    Selamat bertualang di dunia imajinasi!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="./assets/js/ui.js"></script>
+    <script type="module" src="./assets/js/pages/index.js"></script>
+</body>
+</html>
