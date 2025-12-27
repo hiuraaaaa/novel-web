@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genres - MeioNovel</title>
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        /* Inline CSS for genres.html */
+        .genres-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .genre-header {
+            margin: 2rem 0 1rem;
+        }
+        
+        .genre-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .back-button:hover {
+            background: var(--border-color);
+        }
+        
+        @media (max-width: 768px) {
+            .genres-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .genres-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="top-header">
+            <a href="index.html" class="back-button">
+                ‹ Back
+            </a>
+            <h1 style="font-size: 1.5rem; font-weight: 700;">Browse Genres</h1>
+            
+            <!-- Search Bar -->
+            <form id="search-form" class="search-form">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" 
+                       id="search-input" 
+                       class="search-input" 
+                       placeholder="Search genres..." 
+                       autocomplete="off"
+                       aria-label="Search genres">
+            </form>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <div class="genre-header">
+                <h2 class="section-title">All Genres</h2>
+                <p class="genre-count" id="total-genres">Loading genres...</p>
+            </div>
+            
+            <div id="genres-container" class="genres-grid">
+                <!-- Genres will be loaded here -->
+                ${Array(12).fill().map(() => `
+                    <div class="genre-card skeleton" style="height: 100px;"></div>
+                `).join('')}
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="./assets/js/pages/genres.js"></script>
+</body>
+</html>
