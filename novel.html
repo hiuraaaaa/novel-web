@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novel Details - MeioNovel</title>
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        /* Inline CSS for novel.html */
+        .novel-header {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            align-items: flex-start;
+        }
+        
+        .novel-cover {
+            flex: 0 0 200px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .novel-cover img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .novel-info {
+            flex: 1;
+        }
+        
+        .novel-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        
+        .novel-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .novel-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .genre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .genre-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .genre-tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .synopsis {
+            margin: 2rem 0;
+            line-height: 1.8;
+        }
+        
+        .synopsis h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .chapters-section {
+            margin: 3rem 0;
+        }
+        
+        .chapters-list {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .chapters-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chapters-list::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        
+        .chapters-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+        
+        .chapter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            text-decoration: none;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+        
+        .chapter-item:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .chapter-item:hover .chapter-date {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .chapter-title {
+            font-weight: 500;
+        }
+        
+        .chapter-date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .related-section {
+            margin: 3rem 0;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .show-more {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .novel-header {
+                flex-direction: column;
+            }
+            
+            .novel-cover {
+                flex: 0 0 auto;
+                width: 150px;
+                margin: 0 auto;
+            }
+            
+            .novel-title {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+            
+            .novel-meta {
+                justify-content: center;
+            }
+            
+            .novel-actions {
+                justify-content: center;
+            }
+            
+            .genre-tags {
+                justify-content: center;
+            }
+            
+            .chapters-list {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="top-header">
+            <a href="javascript:history.back()" class="back-button" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-color); margin-bottom: 1rem;">
+                ‹ Back
+            </a>
+            
+            <!-- Search Bar -->
+            <form id="search-form" class="search-form">
+                <span class="search-icon">🔍</span>
+                <input type="search" 
+                       id="search-input" 
+                       class="search-input" 
+                       placeholder="Search novels..." 
+                       autocomplete="off">
+            </form>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Novel Details -->
+            <div id="novel-details">
+                <!-- Content will be loaded here -->
+                <div class="novel-header">
+                    <div class="novel-cover skeleton" style="width: 200px; height: 300px;"></div>
+                    <div class="novel-info">
+                        <div class="novel-title skeleton" style="height: 2rem; width: 80%; margin-bottom: 1rem;"></div>
+                        <div class="novel-meta">
+                            <div class="meta-item skeleton" style="height: 1rem; width: 100px;"></div>
+                            <div class="meta-item skeleton" style="height: 1rem; width: 80px;"></div>
+                            <div class="meta-item skeleton" style="height: 1rem; width: 120px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="./assets/js/pages/novel.js"></script>
+</body>
+</html>
