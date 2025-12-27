@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter - MeioNovel</title>
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        /* Inline CSS for chapter.html */
+        .chapter-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        
+        .chapter-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chapter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+            padding: 0 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .chapter-content {
+            line-height: 1.8;
+            font-size: 1.125rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .chapter-text {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        /* Illustration/Gambar Styles */
+        .chapter-illustration {
+            margin: 2rem auto;
+            text-align: center;
+            max-width: 100%;
+        }
+        
+        .illustration-container {
+            display: inline-block;
+            max-width: 100%;
+            position: relative;
+        }
+        
+        .illustration-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .illustration-img:hover {
+            transform: scale(1.01);
+        }
+        
+        .illustration-caption {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+        }
+        
+        /* Lightbox Modal for Images */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox-modal.active {
+            display: flex;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 1rem;
+        }
+        
+        .lightbox-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background 0.3s ease;
+        }
+        
+        .lightbox-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .lightbox-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.5rem;
+        }
+        
+        /* Responsive Images */
+        .illustration-img.loading {
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-color) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            min-height: 300px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Illustration indicator */
+        .illustration-indicator {
+            display: inline-block;
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.125rem 0.5rem;
+            border-radius: var(--radius-sm);
+            vertical-align: middle;
+        }
+        
+        .chapter-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            position: sticky;
+            bottom: 80px;
+            z-index: 5;
+        }
+        
+        .reader-settings {
+            position: fixed;
+            bottom: 120px;
+            right: 1rem;
+            z-index: 10;
+        }
+        
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .settings-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .settings-panel {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: var(--bg-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--hover-shadow);
+            min-width: 200px;
+            display: none;
+        }
+        
+        .settings-panel.show {
+            display: block;
+        }
+        
+        .setting-item {
+            margin-bottom: 1rem;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .font-size-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .font-size-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .font-size-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .theme-select {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .theme-option {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .theme-option.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 100;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .chapter-content {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+            
+            .chapter-illustration {
+                margin: 1.5rem auto;
+            }
+            
+            .illustration-img {
+                border-radius: var(--radius-sm);
+            }
+            
+            .illustration-caption {
+                font-size: 0.75rem;
+                padding: 0 0.5rem;
+            }
+            
+            .chapter-navigation {
+                margin: 1rem -0.5rem;
+                border-radius: 0;
+                position: fixed;
+                bottom: 60px;
+                left: 0;
+                right: 0;
+            }
+            
+            .reader-settings {
+                bottom: 140px;
+                right: 0.5rem;
+            }
+            
+            .settings-panel {
+                min-width: 180px;
+                right: -0.5rem;
+            }
+            
+            .lightbox-content {
+                max-width: 95%;
+            }
+            
+            .lightbox-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="reading-progress"></div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightbox-modal">
+        <button class="lightbox-close" id="lightbox-close">×</button>
+        <div class="lightbox-nav">
+            <button class="lightbox-btn" id="lightbox-prev">‹</button>
+            <button class="lightbox-btn" id="lightbox-next">›</button>
+        </div>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-img" id="lightbox-img">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="chapter-header">
+        <div class="chapter-nav-top">
+            <a href="javascript:history.back()" class="btn btn-secondary" style="padding: 0.5rem;">
+                ‹ Back
+            </a>
+            <div class="chapter-title" id="chapter-title">Loading...</div>
+            <div style="width: 70px;"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div id="chapter-content" class="chapter-content">
+            <!-- Chapter content will be loaded here -->
+            ${Array(10).fill().map(() => `
+                <div class="chapter-text skeleton" style="height: 1.5rem; margin-bottom: 1rem;"></div>
+            `).join('')}
+        </div>
+    </main>
+
+    <!-- Chapter Navigation -->
+    <div class="chapter-navigation" id="chapter-navigation"></div>
+
+    <!-- Reader Settings -->
+    <div class="reader-settings">
+        <button class="settings-btn" id="settings-toggle">⚙️</button>
+        <div class="settings-panel" id="settings-panel">
+            <div class="setting-item">
+                <label class="setting-label">Font Size</label>
+                <div class="font-size-controls">
+                    <button class="font-size-btn" data-size="small">A</button>
+                    <button class="font-size-btn active" data-size="medium">A</button>
+                    <button class="font-size-btn" data-size="large">A</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label class="setting-label">Theme</label>
+                <div class="theme-select">
+                    <div class="theme-option active" data-theme="light">☀️ Light</div>
+                    <div class="theme-option" data-theme="sepia">📜 Sepia</div>
+                    <div class="theme-option" data-theme="dark">🌙 Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./assets/js/pages/chapter.js"></script>
+    <script>
+        // Lightbox functionality
+        class ChapterIllustration {
+            constructor() {
+                this.lightboxModal = document.getElementById('lightbox-modal');
+                this.lightboxImg = document.getElementById('lightbox-img');
+                this.lightboxCaption = document.getElementById('lightbox-caption');
+                this.lightboxClose = document.getElementById('lightbox-close');
+                this.lightboxPrev = document.getElementById('lightbox-prev');
+                this.lightboxNext = document.getElementById('lightbox-next');
+                this.currentIllustrations = [];
+                this.currentIndex = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                this.lightboxClose.addEventListener('click', () => this.close());
+                this.lightboxPrev.addEventListener('click', () => this.prev());
+                this.lightboxNext.addEventListener('click', () => this.next());
+                
+                // Close on click outside
+                this.lightboxModal.addEventListener('click', (e) => {
+                    if (e.target === this.lightboxModal) {
+                        this.close();
+                    }
+                });
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (!this.lightboxModal.classList.contains('active')) return;
+                    
+                    switch(e.key) {
+                        case 'Escape':
+                            this.close();
+                            break;
+                        case 'ArrowLeft':
+                            this.prev();
+                            break;
+                        case 'ArrowRight':
+                            this.next();
+                            break;
+                    }
+                });
+            }
+            
+            open(imgElement, illustrations) {
+                this.currentIllustrations = illustrations;
+                this.currentIndex = this.currentIllustrations.indexOf(imgElement);
+                
+                if (this.currentIndex === -1) return;
+                
+                this.lightboxImg.src = imgElement.src;
+                this.lightboxCaption.textContent = imgElement.alt || '';
+                this.lightboxModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                this.updateNavButtons();
+            }
+            
+            close() {
+                this.lightboxModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            prev() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                    this.updateImage();
+                }
+            }
+            
+            next() {
+                if (this.currentIndex < this.currentIllustrations.length - 1) {
+                    this.currentIndex++;
+                    this.updateImage();
+                }
+            }
+            
+            updateImage() {
+                const imgElement = this.currentIllustrations[this.currentIndex];
+                this.lightboxImg.src = imgElement.src;
+                this.lightboxCaption.textContent = imgElement.alt || '';
+                this.updateNavButtons();
+            }
+            
+            updateNavButtons() {
+                this.lightboxPrev.style.display = this.currentIndex > 0 ? 'flex' : 'none';
+                this.lightboxNext.style.display = this.currentIndex < this.currentIllustrations.length - 1 ? 'flex' : 'none';
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.chapterIllustration = new ChapterIllustration();
+        });
+    </script>
+</body>
+</html>
