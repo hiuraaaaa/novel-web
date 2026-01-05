@@ -5,16 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmarks - MeioNovel</title>
     <link rel="stylesheet" href="assets/css/components.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Inline CSS for bookmark.html */
         .bookmarks-header {
             margin: 2rem 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .bookmarks-header h2 {
+            margin: 0;
         }
         
         .bookmarks-actions {
             display: flex;
             gap: 0.5rem;
-            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .bookmarks-actions .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .bookmarks-actions .btn svg {
+            width: 16px;
+            height: 16px;
         }
         
         .empty-state {
@@ -22,10 +46,124 @@
             padding: 3rem 1rem;
         }
         
-        .empty-state i {
-            font-size: 3rem;
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
             opacity: 0.3;
             margin-bottom: 1rem;
+            stroke-width: 1.5;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin: 1rem 0;
+        }
+
+        .empty-state .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .empty-state .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Back button styling */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background: var(--bg-secondary);
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Header styling */
+        .top-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-header h1 svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-color);
+        }
+
+        /* Bookmarks grid */
+        .bookmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .bookmarks-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .bookmarks-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 0.75rem;
+            }
+        }
+
+        /* Stats card */
+        .bookmarks-stats {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .stat-item .stat-value svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
         }
     </style>
 </head>
@@ -33,18 +171,49 @@
     <div class="container">
         <!-- Header -->
         <header class="top-header">
-            <a href="index.html" class="back-button" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-color); margin-bottom: 1rem;">
-                ‹ Back
+            <a href="index.html" class="back-button">
+                <i data-lucide="arrow-left"></i>
+                Back
             </a>
-            <h1 style="font-size: 1.5rem; font-weight: 700;">Bookmarks</h1>
+            <h1>
+                <i data-lucide="bookmark"></i>
+                Bookmarks
+            </h1>
         </header>
 
         <!-- Main Content -->
         <main>
+            <!-- Bookmarks Stats -->
+            <div class="bookmarks-stats" id="bookmarks-stats" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-value">
+                        <i data-lucide="bookmark"></i>
+                        <span id="total-bookmarks">0</span>
+                    </div>
+                    <div class="stat-label">Total Saved</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">
+                        <i data-lucide="clock"></i>
+                        <span id="recent-bookmarks">0</span>
+                    </div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+
             <div class="bookmarks-header">
                 <h2 class="section-title">Your Bookmarks</h2>
                 <div class="bookmarks-actions">
-                    <button onclick="ui.clearBookmarks()" class="btn btn-secondary" id="clear-bookmarks">
+                    <button onclick="sortBookmarks('recent')" class="btn btn-secondary" id="sort-recent">
+                        <i data-lucide="clock"></i>
+                        Recent
+                    </button>
+                    <button onclick="sortBookmarks('title')" class="btn btn-secondary" id="sort-title">
+                        <i data-lucide="sort-asc"></i>
+                        Title
+                    </button>
+                    <button onclick="clearBookmarks()" class="btn btn-secondary" id="clear-bookmarks">
+                        <i data-lucide="trash-2"></i>
                         Clear All
                     </button>
                 </div>
@@ -52,9 +221,11 @@
             
             <div id="bookmarks-container">
                 <!-- Bookmarks will be loaded here -->
-                ${Array(6).fill().map(() => `
-                    <div class="novel-card skeleton" style="height: 300px;"></div>
-                `).join('')}
+                <div class="bookmarks-grid">
+                    ${Array(6).fill().map(() => `
+                        <div class="novel-card skeleton" style="height: 300px;"></div>
+                    `).join('')}
+                </div>
             </div>
         </main>
     </div>
@@ -63,14 +234,81 @@
     <script type="module">
         import ui from './assets/js/ui.js';
         
+        // Global functions for onclick handlers
+        window.clearBookmarks = () => {
+            ui.clearBookmarks();
+        };
+
+        let currentSort = 'recent';
+        
+        window.sortBookmarks = (sortType) => {
+            currentSort = sortType;
+            const bookmarks = ui.getBookmarks();
+            
+            if (sortType === 'recent') {
+                bookmarks.sort((a, b) => (b.added || 0) - (a.added || 0));
+            } else if (sortType === 'title') {
+                bookmarks.sort((a, b) => a.title.localeCompare(b.title));
+            }
+            
+            // Update UI with sorted bookmarks
+            const container = document.getElementById('bookmarks-container');
+            if (bookmarks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="bookmark" style="width: 64px; height: 64px;"></i>
+                        <p>No bookmarks yet</p>
+                        <a href="index.html" class="btn btn-primary">
+                            <i data-lucide="search"></i>
+                            Browse Novels
+                        </a>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="bookmarks-grid">
+                        ${bookmarks.map(bookmark => ui.createNovelCard(bookmark)).join('')}
+                    </div>
+                `;
+            }
+            
+            // Re-initialize icons
+            lucide.createIcons();
+            
+            // Update active button state
+            document.querySelectorAll('.bookmarks-actions .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`sort-${sortType}`).classList.add('active');
+        };
+
+        function updateStats() {
+            const bookmarks = ui.getBookmarks();
+            const total = bookmarks.length;
+            
+            // Count bookmarks added in the last 7 days
+            const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+            const recentCount = bookmarks.filter(b => (b.added || 0) > weekAgo).length;
+            
+            if (total > 0) {
+                document.getElementById('bookmarks-stats').style.display = 'flex';
+                document.getElementById('total-bookmarks').textContent = total;
+                document.getElementById('recent-bookmarks').textContent = recentCount;
+            } else {
+                document.getElementById('bookmarks-stats').style.display = 'none';
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', () => {
             ui.initCommonUI('bookmark');
             ui.updateBookmarksUI();
+            updateStats();
             
-            // Clear bookmarks button
-            document.getElementById('clear-bookmarks').addEventListener('click', () => {
-                ui.clearBookmarks();
-            });
+            // Set default sort button as active
+            document.getElementById('sort-recent').classList.add('active');
+            
+            // Initialize Lucide icons
+            lucide.createIcons();
         });
     </script>
 </body>
