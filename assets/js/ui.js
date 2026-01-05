@@ -7,6 +7,13 @@ class UIHelper {
         this.initializeEventListeners();
     }
 
+    // Initialize Lucide icons
+    initLucideIcons() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
     // Initialize event listeners
     initializeEventListeners() {
         // Handle navigation clicks
@@ -14,7 +21,7 @@ class UIHelper {
             // Handle history nav
             if (e.target.closest('.nav-item[href*="history"]') || 
                 e.target.closest('.history-nav') ||
-                (e.target.closest('.nav-item') && e.target.closest('.nav-item').querySelector('i')?.textContent === '🕒')) {
+                e.target.closest('[data-nav="history"]')) {
                 e.preventDefault();
                 this.handleHistoryNavClick();
             }
@@ -22,7 +29,7 @@ class UIHelper {
             // Handle bookmark nav
             if (e.target.closest('.nav-item[href*="bookmark"]') || 
                 e.target.closest('.bookmarks-nav') ||
-                (e.target.closest('.nav-item') && e.target.closest('.nav-item').querySelector('i')?.textContent === '🔖')) {
+                e.target.closest('[data-nav="bookmark"]')) {
                 e.preventDefault();
                 this.handleBookmarkNavClick();
             }
@@ -96,7 +103,10 @@ class UIHelper {
                     ${cleanData.latestChapter ? 
                         `<p class="novel-card-chapter">${cleanData.latestChapter}</p>` : ''}
                     ${cleanData.rating && cleanData.rating !== 'N/A' ? 
-                        `<p class="novel-card-rating">⭐ ${cleanData.rating}</p>` : ''}
+                        `<p class="novel-card-rating">
+                            <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                            ${cleanData.rating}
+                        </p>` : ''}
                 </div>
             </a>
         `;
@@ -107,7 +117,10 @@ class UIHelper {
         return `
             <a href="genres.html?genre=${genre.slug}" class="genre-card">
                 <div class="genre-name">${genre.name}</div>
-                <div class="genre-count">${count} Novels</div>
+                <div class="genre-count">
+                    <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+                    ${count} Novels
+                </div>
             </a>
         `;
     }
@@ -122,8 +135,14 @@ class UIHelper {
                      onerror="this.onerror=null;this.src='https://via.placeholder.com/50x50/3b82f6/ffffff?text=Novel'">
                 <div class="history-content">
                     <h4 class="history-title">${item.title}</h4>
-                    <p class="history-chapter">${item.chapter}</p>
-                    <p class="history-date">${this.formatDate(item.timestamp)}</p>
+                    <p class="history-chapter">
+                        <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+                        ${item.chapter}
+                    </p>
+                    <p class="history-date">
+                        <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                        ${this.formatDate(item.timestamp)}
+                    </p>
                 </div>
             </a>
         `;
@@ -149,12 +168,17 @@ class UIHelper {
                         </div>
                     `).join('')}
                 </div>
-                <button class="slider-nav slider-prev">‹</button>
-                <button class="slider-nav slider-next">›</button>
+                <button class="slider-nav slider-prev" aria-label="Previous slide">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button class="slider-nav slider-next" aria-label="Next slide">
+                    <i data-lucide="chevron-right"></i>
+                </button>
                 <div class="slider-dots">
                     ${slides.slice(0, 5).map((_, index) => `
                         <button class="slider-dot ${index === 0 ? 'active' : ''}" 
-                                data-index="${index}"></button>
+                                data-index="${index}"
+                                aria-label="Go to slide ${index + 1}"></button>
                     `).join('')}
                 </div>
             </div>
@@ -246,6 +270,9 @@ class UIHelper {
 
         // Start auto slide
         startAutoSlide();
+        
+        // Initialize icons in slider
+        this.initLucideIcons();
     }
 
     createChapterNavigation(nav) {
@@ -259,12 +286,14 @@ class UIHelper {
                 ${nav.prev ? `
                     <a href="chapter.html?slug=${nav.prev.split('/')[0]}&chapter=${nav.prev}" 
                        class="btn btn-secondary">
-                        ‹ Previous
+                        <i data-lucide="chevron-left" style="width: 18px; height: 18px;"></i>
+                        Previous
                     </a>
                 ` : '<div style="width: 100px;"></div>'}
                 
                 ${novelSlug ? `
                     <a href="novel.html?slug=${novelSlug}" class="btn btn-secondary">
+                        <i data-lucide="list" style="width: 18px; height: 18px;"></i>
                         All Chapters
                     </a>
                 ` : '<div style="width: 100px;"></div>'}
@@ -272,7 +301,8 @@ class UIHelper {
                 ${nav.next ? `
                     <a href="chapter.html?slug=${nav.next.split('/')[0]}&chapter=${nav.next}" 
                        class="btn btn-primary">
-                        Next ›
+                        Next
+                        <i data-lucide="chevron-right" style="width: 18px; height: 18px;"></i>
                     </a>
                 ` : '<div style="width: 100px;"></div>'}
             </div>
@@ -332,6 +362,7 @@ class UIHelper {
             if (this.history.length === 0) {
                 homeHistoryContainer.innerHTML = `
                     <div class="empty-state">
+                        <i data-lucide="book-open" style="width: 48px; height: 48px;"></i>
                         <p>No reading history yet</p>
                     </div>
                 `;
@@ -339,6 +370,7 @@ class UIHelper {
                 const latestHistory = this.history[0];
                 homeHistoryContainer.innerHTML = this.createHistoryCard(latestHistory);
             }
+            this.initLucideIcons();
         }
 
         // Update history page
@@ -347,9 +379,10 @@ class UIHelper {
             if (this.history.length === 0) {
                 historyPageContainer.innerHTML = `
                     <div class="empty-state">
-                        <i>📖</i>
+                        <i data-lucide="book-open" style="width: 48px; height: 48px;"></i>
                         <p>No reading history yet</p>
                         <a href="index.html" class="btn btn-primary mt-2">
+                            <i data-lucide="home" style="width: 18px; height: 18px;"></i>
                             Start Reading
                         </a>
                     </div>
@@ -359,6 +392,7 @@ class UIHelper {
                     .map(item => this.createHistoryCard(item))
                     .join('');
             }
+            this.initLucideIcons();
         }
 
         // Update count badges
@@ -425,9 +459,10 @@ class UIHelper {
             if (this.bookmarks.length === 0) {
                 bookmarkContainer.innerHTML = `
                     <div class="empty-state">
-                        <i>🔖</i>
+                        <i data-lucide="bookmark" style="width: 48px; height: 48px;"></i>
                         <p>No bookmarks yet</p>
                         <a href="index.html" class="btn btn-primary mt-2">
+                            <i data-lucide="search" style="width: 18px; height: 18px;"></i>
                             Browse Novels
                         </a>
                     </div>
@@ -439,6 +474,7 @@ class UIHelper {
                     </div>
                 `;
             }
+            this.initLucideIcons();
         }
 
         // Update count badges
@@ -474,11 +510,14 @@ class UIHelper {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem(CONFIG.THEME_KEY, theme);
         
+        // Update theme toggle button - icons will be handled by CSS
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
-            themeToggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
             themeToggle.title = `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`;
         }
+        
+        // Re-initialize icons after theme change
+        this.initLucideIcons();
     }
 
     // Utility Functions
@@ -520,11 +559,27 @@ class UIHelper {
         toast.id = 'toast-notification';
         toast.className = 'toast-notification';
         
-        // Set background color based on type
-        const bgColor = type === 'success' ? '#10b981' : 
-                       type === 'error' ? '#ef4444' : 
-                       type === 'warning' ? '#f59e0b' : 
-                       '#3b82f6';
+        // Set icon based on type
+        let icon = 'info';
+        let bgColor = '#3b82f6';
+        
+        switch(type) {
+            case 'success':
+                icon = 'check-circle';
+                bgColor = '#10b981';
+                break;
+            case 'error':
+                icon = 'alert-circle';
+                bgColor = '#ef4444';
+                break;
+            case 'warning':
+                icon = 'alert-triangle';
+                bgColor = '#f59e0b';
+                break;
+            default:
+                icon = 'info';
+                bgColor = '#3b82f6';
+        }
         
         toast.style.cssText = `
             position: fixed;
@@ -541,10 +596,19 @@ class UIHelper {
             max-width: 90%;
             text-align: center;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         `;
         
-        toast.innerHTML = message;
+        toast.innerHTML = `
+            <i data-lucide="${icon}" style="width: 18px; height: 18px;"></i>
+            <span>${message}</span>
+        `;
         document.body.appendChild(toast);
+        
+        // Initialize icon
+        this.initLucideIcons();
         
         // Auto remove after 3 seconds
         setTimeout(() => {
@@ -557,26 +621,26 @@ class UIHelper {
     createBottomNavbar(currentPage = 'home') {
         return `
             <nav class="bottom-navbar">
-                <a href="index.html" class="nav-item ${currentPage === 'home' ? 'active' : ''}">
-                    <i>🏠</i>
+                <a href="index.html" class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-nav="home">
+                    <i data-lucide="home"></i>
                     <span>Home</span>
                 </a>
-                <a href="genres.html" class="nav-item ${currentPage === 'genres' ? 'active' : ''}">
-                    <i>📚</i>
+                <a href="genres.html" class="nav-item ${currentPage === 'genres' ? 'active' : ''}" data-nav="genres">
+                    <i data-lucide="library"></i>
                     <span>Genres</span>
                 </a>
-                <a href="history.html" class="nav-item ${currentPage === 'history' ? 'active' : ''}">
-                    <i>🕒</i>
+                <a href="history.html" class="nav-item ${currentPage === 'history' ? 'active' : ''}" data-nav="history">
+                    <i data-lucide="clock"></i>
                     <span>History</span>
                     ${this.history.length > 0 ? `<span class="history-count">${this.history.length}</span>` : ''}
                 </a>
-                <a href="bookmark.html" class="nav-item ${currentPage === 'bookmark' ? 'active' : ''}">
-                    <i>🔖</i>
+                <a href="bookmark.html" class="nav-item ${currentPage === 'bookmark' ? 'active' : ''}" data-nav="bookmark">
+                    <i data-lucide="bookmark"></i>
                     <span>Bookmark</span>
                     ${this.bookmarks.length > 0 ? `<span class="bookmark-count">${this.bookmarks.length}</span>` : ''}
                 </a>
-                <a href="profile.html" class="nav-item ${currentPage === 'profile' ? 'active' : ''}">
-                    <i>👤</i>
+                <a href="profile.html" class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-nav="profile">
+                    <i data-lucide="user"></i>
                     <span>Profile</span>
                 </a>
             </nav>
@@ -624,6 +688,9 @@ class UIHelper {
         
         // Setup search
         this.setupSearch();
+        
+        // Initialize all Lucide icons
+        this.initLucideIcons();
     }
 
     setupSearch() {
