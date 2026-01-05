@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - MeioNovel</title>
     <link rel="stylesheet" href="assets/css/components.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Inline CSS for profile.html */
         .profile-header {
@@ -14,6 +18,25 @@
             color: white;
             border-radius: var(--radius);
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: 100px 100px;
+            opacity: 0.3;
+        }
+
+        .profile-content {
+            position: relative;
+            z-index: 1;
         }
         
         .profile-avatar {
@@ -26,6 +49,12 @@
             justify-content: center;
             font-size: 2rem;
             margin: 0 auto 1rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-avatar svg {
+            width: 40px;
+            height: 40px;
         }
         
         .profile-name {
@@ -37,6 +66,15 @@
         .profile-email {
             opacity: 0.8;
             font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .profile-email svg {
+            width: 14px;
+            height: 14px;
         }
         
         .stats-grid {
@@ -51,13 +89,30 @@
             border-radius: var(--radius);
             padding: 1rem;
             text-align: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
         }
         
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value svg {
+            width: 20px;
+            height: 20px;
         }
         
         .stat-label {
@@ -90,6 +145,15 @@
             cursor: pointer;
             position: relative;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .tab-btn svg {
+            width: 18px;
+            height: 18px;
         }
         
         .tab-btn.active {
@@ -104,6 +168,10 @@
             right: 0;
             height: 2px;
             background: var(--primary-color);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-color);
         }
         
         .tab-content {
@@ -124,10 +192,38 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: var(--transition);
+        }
+
+        .settings-item:hover {
+            background: var(--bg-secondary);
         }
         
         .settings-item:last-child {
             border-bottom: none;
+        }
+
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .settings-item-left svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary-color);
+        }
+
+        .settings-item-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
+        }
+
+        .settings-item-info p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
         
         .toggle-switch {
@@ -189,6 +285,14 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label svg {
+            width: 16px;
+            height: 16px;
         }
         
         .form-input {
@@ -199,6 +303,13 @@
             background: var(--bg-secondary);
             color: var(--text-color);
             font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
         .login-options {
@@ -212,6 +323,94 @@
             color: var(--primary-color);
             text-decoration: underline;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guest-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .guest-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Back button styling */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background: var(--bg-secondary);
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Header styling */
+        .top-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-header h1 svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-color);
+        }
+
+        /* Action buttons */
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Cache info */
+        .cache-info {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .cache-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .cache-info-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-secondary);
         }
         
         @media (max-width: 768px) {
@@ -223,6 +422,11 @@
                 padding: 0.75rem 0.5rem;
                 font-size: 0.875rem;
             }
+
+            .tab-btn svg {
+                width: 16px;
+                height: 16px;
+            }
         }
     </style>
 </head>
@@ -230,10 +434,14 @@
     <div class="container">
         <!-- Header -->
         <header class="top-header">
-            <a href="index.html" class="back-button" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-color); margin-bottom: 1rem;">
-                ‹ Back
+            <a href="index.html" class="back-button">
+                <i data-lucide="arrow-left"></i>
+                Back
             </a>
-            <h1 style="font-size: 1.5rem; font-weight: 700;">Profile</h1>
+            <h1>
+                <i data-lucide="user"></i>
+                Profile
+            </h1>
         </header>
 
         <!-- Main Content -->
@@ -246,6 +454,12 @@
         </main>
     </div>
 
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
     <script type="module" src="./assets/js/pages/profile.js"></script>
 </body>
 </html>
