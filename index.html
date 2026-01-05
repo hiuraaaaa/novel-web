@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MeioNovel - Read Novels Online</title>
     <link rel="stylesheet" href="assets/css/components.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Inline CSS for index.html */
         .hero-section {
@@ -36,12 +40,22 @@
             white-space: nowrap;
             transition: var(--transition);
             border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .quick-action:hover {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .quick-action svg {
+            width: 16px;
+            height: 16px;
         }
         
         .history-section {
@@ -68,10 +82,12 @@
             color: var(--text-secondary);
         }
         
-        .empty-state i {
-            font-size: 2rem;
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
             margin-bottom: 1rem;
             opacity: 0.5;
+            stroke-width: 1.5;
         }
 
         /* Thank You Section Styling */
@@ -88,12 +104,138 @@
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .thank-you-footer h3 svg {
+            width: 24px;
+            height: 24px;
         }
 
         .thank-you-footer p {
             color: var(--text-secondary);
             font-size: 0.95rem;
             line-height: 1.6;
+        }
+
+        /* Logo styling */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-color);
+        }
+
+        /* Search icon */
+        .search-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Theme toggle button */
+        #theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            padding: 0.6rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #theme-toggle:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: rotate(180deg);
+        }
+
+        #theme-toggle:hover svg {
+            color: white;
+        }
+
+        #theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: var(--transition);
+        }
+
+        /* Theme toggle icons - show/hide based on theme */
+        #theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] #theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] #theme-toggle .sun-icon {
+            display: block;
+        }
+
+        [data-theme="light"] #theme-toggle .moon-icon {
+            display: block;
+        }
+
+        [data-theme="light"] #theme-toggle .sun-icon {
+            display: none;
+        }
+
+        /* Section header styling */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-link {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .section-link:hover {
+            gap: 0.5rem;
+        }
+
+        .section-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Button with icon */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
         }
         
         @media (max-width: 768px) {
@@ -104,6 +246,11 @@
             .quick-action {
                 padding: 0.5rem 0.75rem;
                 font-size: 0.875rem;
+            }
+
+            .quick-action svg {
+                width: 14px;
+                height: 14px;
             }
         }
     </style>
@@ -118,15 +265,19 @@
         <header class="top-header">
             <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
                 <a href="index.html" class="logo">
-                    📚 <span>MeioNovel</span>
+                    <i data-lucide="book-open"></i>
+                    <span>MeioNovel</span>
                 </a>
-                <button id="theme-toggle" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;" title="Toggle theme" aria-label="Toggle dark/light mode">
-                    🌙
+                <button id="theme-toggle" title="Toggle theme" aria-label="Toggle dark/light mode">
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <i data-lucide="sun" class="sun-icon"></i>
                 </button>
             </div>
             
             <form id="search-form" class="search-form">
-                <span class="search-icon" aria-hidden="true">🔍</span>
+                <span class="search-icon" aria-hidden="true">
+                    <i data-lucide="search"></i>
+                </span>
                 <input type="search" 
                        id="search-input" 
                        class="search-input" 
@@ -139,17 +290,35 @@
         <main id="main-content">
             <section class="hero-section">
                 <div id="hero-slider" class="skeleton" style="height: 300px; border-radius: var(--radius);">
-                    </div>
+                </div>
             </section>
 
             <section class="quick-actions-section">
                 <div class="quick-actions">
-                    <a href="genres.html" class="quick-action">All Genres</a>
-                    <a href="search.html?sort=latest" class="quick-action">Latest Updates</a>
-                    <a href="search.html?sort=popular" class="quick-action">Most Popular</a>
-                    <a href="search.html?sort=completed" class="quick-action">Completed</a>
-                    <a href="search.html?type=ln" class="quick-action">Light Novels</a>
-                    <a href="search.html?type=wn" class="quick-action">Web Novels</a>
+                    <a href="genres.html" class="quick-action">
+                        <i data-lucide="grid-3x3"></i>
+                        All Genres
+                    </a>
+                    <a href="search.html?sort=latest" class="quick-action">
+                        <i data-lucide="clock"></i>
+                        Latest Updates
+                    </a>
+                    <a href="search.html?sort=popular" class="quick-action">
+                        <i data-lucide="trending-up"></i>
+                        Most Popular
+                    </a>
+                    <a href="search.html?sort=completed" class="quick-action">
+                        <i data-lucide="check-circle"></i>
+                        Completed
+                    </a>
+                    <a href="search.html?type=ln" class="quick-action">
+                        <i data-lucide="book"></i>
+                        Light Novels
+                    </a>
+                    <a href="search.html?type=wn" class="quick-action">
+                        <i data-lucide="file-text"></i>
+                        Web Novels
+                    </a>
                 </div>
             </section>
 
@@ -157,11 +326,13 @@
                 <div class="history-header">
                     <h2 class="section-title">Reading History</h2>
                     <a href="history.html" class="btn btn-secondary" style="font-size: 0.75rem;">
+                        <i data-lucide="arrow-right"></i>
                         View All
                     </a>
                 </div>
                 <div id="history-container" class="history-single">
                     <div class="empty-state">
+                        <i data-lucide="book-open"></i>
                         <p>No reading history yet</p>
                     </div>
                 </div>
@@ -170,24 +341,33 @@
             <section class="updates-section">
                 <div class="section-header">
                     <h2 class="section-title">Latest Updates</h2>
-                    <a href="search.html?sort=latest" class="section-link">View All ›</a>
+                    <a href="search.html?sort=latest" class="section-link">
+                        View All
+                        <i data-lucide="chevron-right"></i>
+                    </a>
                 </div>
                 <div id="latest-updates" class="grid grid-3">
-                    </div>
+                </div>
             </section>
 
             <section class="popular-section">
                 <div class="section-header">
                     <h2 class="section-title">Popular Novels</h2>
-                    <a href="search.html?sort=popular" class="section-link">View All ›</a>
+                    <a href="search.html?sort=popular" class="section-link">
+                        View All
+                        <i data-lucide="chevron-right"></i>
+                    </a>
                 </div>
                 <div id="popular-novels" class="grid grid-3">
-                    </div>
+                </div>
             </section>
 
             <section class="thank-you-footer">
                 <div class="thank-you-content">
-                    <h3>✨ Terima Kasih Telah Berkunjung!</h3>
+                    <h3>
+                        <i data-lucide="sparkles"></i>
+                        Terima Kasih Telah Berkunjung!
+                    </h3>
                     <p>Terima kasih sudah setia membaca novel di <strong>MeioNovel</strong>.<br> 
                     Kami akan terus memperbarui koleksi novel terbaik untuk menemani waktu luangmu.<br>
                     Selamat bertualang di dunia imajinasi!</p>
@@ -196,6 +376,11 @@
         </main>
     </div>
 
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    
     <script type="module" src="./assets/js/ui.js"></script>
     <script type="module" src="./assets/js/pages/index.js"></script>
 </body>
