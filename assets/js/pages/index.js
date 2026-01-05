@@ -76,7 +76,10 @@ class HomePage {
             popularContainer.innerHTML = popularHTML;
         }
 
-        // --- 4. Animasi Fade-In ---
+        // --- 4. Initialize Lucide Icons ---
+        this.initializeIcons();
+
+        // --- 5. Animasi Fade-In ---
         setTimeout(() => {
             document.querySelectorAll('.novel-card').forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.1}s`;
@@ -87,19 +90,32 @@ class HomePage {
         }, 100);
     }
 
+    initializeIcons() {
+        // Re-initialize Lucide icons after dynamic content is loaded
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
     showError() {
         const main = document.querySelector('main');
         if (main) {
             main.innerHTML = `
                 <div class="text-center p-4">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">
+                        <i data-lucide="alert-circle" style="width: 64px; height: 64px; color: #ef4444;"></i>
+                    </div>
                     <h2>Gagal Memuat Konten</h2>
                     <p class="mt-2">Periksa koneksi internet Anda atau coba lagi nanti.</p>
-                    <button onclick="location.reload()" class="btn btn-primary mt-3">
+                    <button onclick="location.reload()" class="btn btn-primary mt-3" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
                         Coba Lagi
                     </button>
                 </div>
             `;
+            
+            // Initialize icons in error message
+            this.initializeIcons();
         }
     }
 }
