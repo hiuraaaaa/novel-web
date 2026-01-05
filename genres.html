@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genres - MeioNovel</title>
     <link rel="stylesheet" href="assets/css/components.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Inline CSS for genres.html */
         .genres-grid {
@@ -16,12 +20,28 @@
         
         .genre-header {
             margin: 2rem 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .genre-header h2 {
+            margin: 0;
         }
         
         .genre-count {
             color: var(--text-secondary);
             font-size: 0.875rem;
-            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .genre-count svg {
+            width: 16px;
+            height: 16px;
         }
         
         .back-button {
@@ -35,15 +55,152 @@
             color: var(--text-color);
             margin-bottom: 1rem;
             transition: var(--transition);
+            border: 1px solid var(--border-color);
         }
         
         .back-button:hover {
-            background: var(--border-color);
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateX(-2px);
+        }
+
+        .back-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Page title styling */
+        .top-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-header h1 svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-color);
+        }
+
+        /* Genre card enhancements */
+        .genre-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .genre-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .genre-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .genre-card .genre-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .genre-card .genre-count svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Search form styling */
+        .search-form {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .search-icon svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* Filter buttons */
+        .filter-section {
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
         
         @media (max-width: 768px) {
             .genres-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .genre-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
         
@@ -62,13 +219,19 @@
         <!-- Header -->
         <header class="top-header">
             <a href="index.html" class="back-button">
-                ‹ Back
+                <i data-lucide="arrow-left"></i>
+                Back
             </a>
-            <h1 style="font-size: 1.5rem; font-weight: 700;">Browse Genres</h1>
+            <h1>
+                <i data-lucide="library"></i>
+                Browse Genres
+            </h1>
             
             <!-- Search Bar -->
             <form id="search-form" class="search-form">
-                <span class="search-icon" aria-hidden="true">🔍</span>
+                <span class="search-icon" aria-hidden="true">
+                    <i data-lucide="search"></i>
+                </span>
                 <input type="search" 
                        id="search-input" 
                        class="search-input" 
@@ -80,9 +243,28 @@
 
         <!-- Main Content -->
         <main id="main-content">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <span class="filter-label">
+                    <i data-lucide="filter"></i>
+                    Sort by:
+                </span>
+                <button class="filter-btn active" data-sort="name">
+                    <i data-lucide="sort-asc"></i>
+                    Name
+                </button>
+                <button class="filter-btn" data-sort="count">
+                    <i data-lucide="trending-up"></i>
+                    Most Novels
+                </button>
+            </div>
+
             <div class="genre-header">
                 <h2 class="section-title">All Genres</h2>
-                <p class="genre-count" id="total-genres">Loading genres...</p>
+                <p class="genre-count" id="total-genres">
+                    <i data-lucide="book-open"></i>
+                    Loading genres...
+                </p>
             </div>
             
             <div id="genres-container" class="genres-grid">
@@ -94,6 +276,12 @@
         </main>
     </div>
 
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
     <script type="module" src="./assets/js/pages/genres.js"></script>
 </body>
 </html>
